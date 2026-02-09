@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    
+</body>
+</html>
+document.querySelectorAll('.program-slider').forEach(slider => {
+const images = slider.dataset.images.split(',');
+let index = 0;
+
+setInterval(() => {
+slider.style.opacity = 0; // pour un petit effet fondu
+
+setTimeout(() => {
+index = (index + 1) % images.length;
+slider.src = images[index];
+slider.style.opacity = 1;
+}, 500);
+
+}, 5000);
+});
+
+.offd-content{
+margin: 100%;
+width: 90%;
+border: 5px solid #ff6905;
+display: flex;
+}
+.group{
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 1em;
+}
+.cart{
+height: 5em;
+padding: 1em;
+background-color: #0313ee;
+font-size: 3rem;
+border-radius: 2em;
+text-align: center;
+align-content: center;
+}
+
+
+
+AIzaSyADBCISE_hz_2HjYT9mV8fOA-0zfLu2Hc4
