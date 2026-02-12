@@ -1,338 +1,244 @@
-// ===== FONCTIONNALITÉS GÉNÉRALES =====
 
-// Navigation mobile
+
+// Menu Hamburger - Code à ajouter dans tous les fichiers
 document.addEventListener('DOMContentLoaded', function () {
-    // Toggle navigation mobile
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navLinks = document.querySelector('.nav-links');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const nav = document.querySelector('nav ul');
+    const body = document.body;
 
-    if (mobileToggle) {
-        mobileToggle.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
-        });
-    }
+    if (mobileMenu && nav) {
+        // Fonction pour ouvrir/fermer le menu
+        function toggleMenu() {
+            nav.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            body.classList.toggle('menu-open');
 
-    // Fermer le menu mobile en cliquant sur un lien
-    const navItems = document.querySelectorAll('.nav-links a');
-    navItems.forEach(item => {
-        item.addEventListener('click', function () {
-            if (window.innerWidth <= 768) {
-                navLinks.classList.remove('active');
+            // Animation de l'icône hamburger
+            const icon = mobileMenu.querySelector('i');
+            if (nav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
-        });
-    });
-
-    // Initialiser les fonctionnalités spécifiques aux pages
-    if (document.querySelector('.reception-hero')) {
-        initReceptionPage();
-    }
-
-    if (document.querySelector('.offrande-hero')) {
-        initOffrandePage();
-    }
-});
-
-// ===== PAGE RÉCEPTION =====
-function initReceptionPage() {
-    // Évangile du jour - données
-    const evangelData = [
-        {
-            date: new Date().toISOString().split('T')[0],
-            title: "L'amour de Dieu",
-            content: "Car Dieu a tant aimé le monde qu'il a donné son Fils unique, afin que quiconque croit en lui ne périsse point, mais qu'il ait la vie éternelle.",
-            verse: "Jean 3:16",
-            reference: "La Bible, Nouveau Testament"
-        },
-        {
-            date: "2023-10-28",
-            title: "La foi qui sauve",
-            content: "Car c'est par la grâce que vous êtes sauvés, par le moyen de la foi. Et cela ne vient pas de vous, c'est le don de Dieu.",
-            verse: "Éphésiens 2:8",
-            reference: "La Bible, Nouveau Testament"
-        },
-        {
-            date: "2023-10-29",
-            title: "La paix de Christ",
-            content: "Je vous laisse la paix, je vous donne ma paix. Je ne vous donne pas comme le monde donne. Que votre cœur ne se trouble point, et ne s'alarme point.",
-            verse: "Jean 14:27",
-            reference: "La Bible, Nouveau Testament"
-        }
-    ];
-
-    // Afficher l'évangile du jour
-    const today = new Date().toISOString().split('T')[0];
-    let todaysEvangel = evangelData.find(ev => ev.date === today);
-
-    // Si pas d'évangile pour aujourd'hui, prendre le premier
-    if (!todaysEvangel) {
-        todaysEvangel = evangelData[0];
-    }
-
-    // Mettre à jour l'interface
-    const evangelTitle = document.getElementById('evangel-title');
-    const evangelContent = document.getElementById('evangel-content');
-    const evangelVerse = document.getElementById('evangel-verse');
-
-    if (evangelTitle && evangelContent && evangelVerse) {
-        evangelTitle.textContent = todaysEvangel.title;
-        evangelContent.innerHTML = `
-            <p>${todaysEvangel.content}</p>
-            <div class="verse">"${todaysEvangel.verse}"</div>
-            <p>${todaysEvangel.reference}</p>
-        `;
-        evangelVerse.textContent = todaysEvangel.verse;
-    }
-
-    // Initialiser le calendrier
-    initCalendar(evangelData);
-
-    // Gestion du formulaire de contact
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Récupérer les valeurs du formulaire
-            const name = document.getElementById('contact-name').value;
-            const email = document.getElementById('contact-email').value;
-            const message = document.getElementById('contact-message').value;
-
-            // Validation simple
-            if (!name || !email || !message) {
-                alert('Veuillez remplir tous les champs du formulaire.');
-                return;
-            }
-
-            // Simuler l'envoi du formulaire
-            alert(`Merci ${name} ! Votre message a été envoyé. Nous vous répondrons à ${email} dans les plus brefs délais.`);
-
-            // Réinitialiser le formulaire
-            contactForm.reset();
-        });
-    }
-}
-
-// ===== CALENDRIER DES ÉVANGILES =====
-function initCalendar(evangelData) {
-    const monthYearElement = document.getElementById('month-year');
-    const calendarDatesElement = document.getElementById('calendar-dates');
-    const prevMonthBtn = document.getElementById('prev-month');
-    const nextMonthBtn = document.getElementById('next-month');
-
-    let currentDate = new Date();
-
-    // Fonction pour afficher le calendrier
-    function renderCalendar(date) {
-        const year = date.getFullYear();
-        const month = date.getMonth();
-
-        // Mettre à jour le mois et l'année affichés
-        const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-
-        monthYearElement.textContent = `${monthNames[month]} ${year}`;
-
-        // Premier jour du mois
-        const firstDay = new Date(year, month, 1);
-        // Dernier jour du mois
-        const lastDay = new Date(year, month + 1, 0);
-        // Jour de la semaine du premier jour (0 = dimanche)
-        const firstDayIndex = firstDay.getDay();
-        // Nombre de jours dans le mois
-        const daysInMonth = lastDay.getDate();
-
-        // Réinitialiser le calendrier
-        calendarDatesElement.innerHTML = '';
-
-        // Ajouter les jours de la semaine
-        const dayNames = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
-        dayNames.forEach(day => {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'calendar-day';
-            dayElement.textContent = day;
-            calendarDatesElement.appendChild(dayElement);
-        });
-
-        // Ajouter les cases vides avant le premier jour
-        for (let i = 0; i < firstDayIndex; i++) {
-            const emptyElement = document.createElement('div');
-            emptyElement.className = 'calendar-date';
-            calendarDatesElement.appendChild(emptyElement);
         }
 
-        // Ajouter les jours du mois
-        const today = new Date().toISOString().split('T')[0];
+        // Événement de clic sur le menu hamburger
+        mobileMenu.addEventListener('click', toggleMenu);
 
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dateElement = document.createElement('div');
-            dateElement.className = 'calendar-date';
-            dateElement.textContent = day;
-
-            // Formater la date pour comparaison
-            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-            // Vérifier si c'est aujourd'hui
-            if (dateString === today) {
-                dateElement.classList.add('active');
-            }
-
-            // Vérifier s'il y a un évangile pour cette date
-            const hasEvangel = evangelData.some(ev => ev.date === dateString);
-            if (hasEvangel) {
-                dateElement.classList.add('has-evangel');
-                dateElement.title = "Évangile disponible pour ce jour";
-            }
-
-            dateElement.addEventListener('click', function () {
-                // Trouver l'évangile pour cette date
-                const selectedEvangel = evangelData.find(ev => ev.date === dateString);
-
-                if (selectedEvangel) {
-                    // Afficher l'évangile sélectionné
-                    const evangelTitle = document.getElementById('evangel-title');
-                    const evangelContent = document.getElementById('evangel-content');
-                    const evangelVerse = document.getElementById('evangel-verse');
-
-                    evangelTitle.textContent = selectedEvangel.title;
-                    evangelContent.innerHTML = `
-                        <p>${selectedEvangel.content}</p>
-                        <div class="verse">"${selectedEvangel.verse}"</div>
-                        <p>${selectedEvangel.reference}</p>
-                    `;
-                    evangelVerse.textContent = selectedEvangel.verse;
-
-                    // Faire défiler jusqu'à l'évangile
-                    document.querySelector('.evangel-du-jour').scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                } else {
-                    alert(`Aucun évangile n'est disponible pour le ${day} ${monthNames[month]} ${year}.`);
+        // Fermer le menu en cliquant sur un lien
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                if (nav.classList.contains('active')) {
+                    toggleMenu();
                 }
             });
+        });
 
-            calendarDatesElement.appendChild(dateElement);
-        }
+        // Fermer le menu en cliquant à l'extérieur
+        document.addEventListener('click', function (event) {
+            if (!nav.contains(event.target) && !mobileMenu.contains(event.target) && nav.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+
+        // Gestion du redimensionnement de la fenêtre
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 992 && nav.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
     }
 
-    // Initialiser le calendrier
-    renderCalendar(currentDate);
 
-    // Gestion des boutons précédent/suivant
-    prevMonthBtn.addEventListener('click', function () {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar(currentDate);
+
+    // Animation des chiffres
+    const chiffreNumbers = document.querySelectorAll('.chiffre-number');
+    chiffreNumbers.forEach(chiffre => {
+        const target = parseInt(chiffre.getAttribute('data-count'));
+        let count = 0;
+        const duration = 2000;
+        const increment = target / (duration / 50);
+
+        const timer = setInterval(() => {
+            count += increment;
+            if (count >= target) {
+                count = target;
+                clearInterval(timer);
+            }
+            chiffre.textContent = Math.floor(count);
+        }, 50);
     });
 
-    nextMonthBtn.addEventListener('click', function () {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar(currentDate);
+    // Animation au défilement
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observer les cartes de valeurs
+    document.querySelectorAll('.valeur-card').forEach(card => {
+        observer.observe(card);
     });
+
+    // Observer les cartes de membres
+    document.querySelectorAll('.membre-card').forEach(card => {
+        observer.observe(card);
+    });
+
+    // Observer les logos de partenaires
+    document.querySelectorAll('.partenaire-logo').forEach(logo => {
+        observer.observe(logo);
+    });
+});
+
+// COLLEZ VOTRE NUMÉRO DE LOCALISATION MAPS ICI ↓
+const mapsEmbedCode = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.258366072422!2d13.45026727492093!3d-5.816578994187247!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6dfbc2b79f84a9%3A0x6e2a3c1a7a8b8b8b!2sMatadi%2C%20R%C3%A9publique%20D%C3%A9mocratique%20du%20Congo!5e0!3m2!1sfr!2sfr!4v1690000000000!5m2!1sfr!2sfr";
+
+// Configuration de l'université
+const universityConfig = {
+    name: "ULIMAT - Université Libre de Matadi",
+    address: "Avenue de l'Université, Quartier Nzadi, Matadi, RDC",
+    phone: "+243 81 234 5678",
+    email: "info@ulimat.cd"
+};
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function () {
+    initializeMaps();
+    setupMapInteractions();
+});
+
+function initializeMaps() {
+    const mapIframe = document.querySelector('.map-frame iframe');
+
+    if (mapIframe && mapsEmbedCode) {
+        // Utiliser le code d'embed personnalisé
+        mapIframe.src = mapsEmbedCode;
+
+        // Animation de la section
+        const mapsSection = document.querySelector('.maps-section');
+        if (mapsSection) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateSection(entry.target);
+                        addUniversityInfo();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            mapsSection.style.opacity = '0';
+            mapsSection.style.transform = 'translateY(30px)';
+            mapsSection.style.transition = 'all 0.8s ease';
+            observer.observe(mapsSection);
+        }
+    } else {
+        console.error('Code Maps non trouvé');
+    }
 }
 
-// ===== PAGE OFFRANDE =====
-function initOffrandePage() {
-    // Gestion des options de montant
-    const amountOptions = document.querySelectorAll('.amount-option');
-    const customAmountInput = document.getElementById('custom-amount');
+function animateSection(section) {
+    section.style.opacity = '1';
+    section.style.transform = 'translateY(0)';
+}
 
-    amountOptions.forEach(option => {
-        option.addEventListener('click', function () {
-            // Retirer la classe active de toutes les options
-            amountOptions.forEach(opt => opt.classList.remove('active'));
+function setupMapInteractions() {
+    const mapFrame = document.querySelector('.map-frame');
 
-            // Ajouter la classe active à l'option cliquée
-            this.classList.add('active');
-
-            // Mettre à jour l'input personnalisé
-            if (this.dataset.amount) {
-                customAmountInput.value = this.dataset.amount;
-            }
+    if (mapFrame) {
+        mapFrame.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
         });
-    });
 
-    // Gestion de l'input personnalisé
-    customAmountInput.addEventListener('input', function () {
-        // Retirer la classe active de toutes les options
-        amountOptions.forEach(opt => opt.classList.remove('active'));
+        mapFrame.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
 
-        // Si l'input est vide, réactiver l'option par défaut
-        if (!this.value) {
-            document.querySelector('.amount-option[data-amount="5000"]').classList.add('active');
+        // Indicateur de chargement
+        const mapIframe = mapFrame.querySelector('iframe');
+        if (mapIframe) {
+            mapIframe.addEventListener('load', function () {
+                showLoadIndicator();
+            });
         }
-    });
-
-    // Gestion du formulaire de don
-    const donationForm = document.getElementById('donation-form');
-    if (donationForm) {
-        donationForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // Récupérer les valeurs du formulaire
-            const amount = document.getElementById('custom-amount').value;
-            const name = document.getElementById('donor-name').value;
-            const email = document.getElementById('donor-email').value;
-            const prayer = document.getElementById('donation-prayer').value;
-
-            // Validation
-            if (!amount || amount <= 0) {
-                alert('Veuillez spécifier un montant valide pour votre offrande.');
-                return;
-            }
-
-            if (!name || !email) {
-                alert('Veuillez remplir vos informations personnelles.');
-                return;
-            }
-
-            // Simuler le traitement du don
-            const formattedAmount = parseInt(amount).toLocaleString();
-            alert(`Merci ${name} pour votre offrande de ${formattedAmount} FCFA !\n\nUn email de confirmation a été envoyé à ${email}.\n\nQue Dieu vous bénisse abondamment !`);
-
-            // Réinitialiser le formulaire
-            donationForm.reset();
-            document.querySelector('.amount-option[data-amount="5000"]').classList.add('active');
-        });
     }
+}
 
-    // Générer des versets bibliques aléatoires
-    const bibleVerses = [
-        {
-            text: "Donnez, et il vous sera donné: on versera dans votre sein une bonne mesure, serrée, secouée et qui déborde; car on vous mesurera avec la mesure dont vous vous serez servis.",
-            reference: "Luc 6:38"
-        },
-        {
-            text: "Honore l'Éternel avec tes biens, et avec les prémices de tout ton revenu: alors tes greniers seront remplis d'abondance, et tes cuves regorgeront de moût.",
-            reference: "Proverbes 3:9-10"
-        },
-        {
-            text: "Que chacun donne comme il l'a résolu en son cœur, sans tristesse ni contrainte; car Dieu aime celui qui donne avec joie.",
-            reference: "2 Corinthiens 9:7"
-        },
-        {
-            text: "Apportez à la maison du trésor toutes les dîmes, afin qu'il y ait de la nourriture dans ma maison; mettez-moi de la sorte à l'épreuve, dit l'Éternel des armées. Et vous verrez si je n'ouvre pas pour vous les écluses des cieux, si je ne répands pas sur vous la bénédiction en abondance.",
-            reference: "Malachie 3:10"
-        },
-        {
-            text: "Celui qui sème peu moissonnera peu, et celui qui sème abondamment moissonnera abondamment.",
-            reference: "2 Corinthiens 9:6"
-        },
-        {
-            text: "Celui qui donne au pauvre n'éprouve pas la disette, mais celui qui ferme les yeux est chargé de malédictions.",
-            reference: "Proverbes 28:27"
+function addUniversityInfo() {
+    const mapsContainer = document.querySelector('.maps-container');
+
+    const infoHTML = `
+        <div class="university-info">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="info-content">
+                    <h3>${universityConfig.name}</h3>
+                    <p class="address">${universityConfig.address}</p>
+                    <div class="contact-details">
+                        <span class="phone">${universityConfig.phone}</span>
+                        <span class="email">${universityConfig.email}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    mapsContainer.insertAdjacentHTML('beforeend', infoHTML);
+
+    // Animation
+    setTimeout(() => {
+        const infoElement = document.querySelector('.university-info');
+        if (infoElement) {
+            infoElement.style.opacity = '1';
+            infoElement.style.transform = 'translateY(0)';
         }
-    ];
+    }, 500);
+}
 
-    // Afficher les versets
-    const versesContainer = document.getElementById('bible-verses-container');
-    if (versesContainer) {
-        bibleVerses.forEach(verse => {
-            const verseElement = document.createElement('div');
-            verseElement.className = 'verse-card';
-            verseElement.innerHTML = `
-                <div class="verse-text">"${verse.text}"</div>
-                <div class="verse-reference">${verse.reference}</div>
-            `;
-            versesContainer.appendChild(verseElement);
-        });
-    }
+function showLoadIndicator() {
+    const mapFrame = document.querySelector('.map-frame');
+    const indicator = document.createElement('div');
+    indicator.className = 'map-indicator';
+    indicator.innerHTML = '📍 Carte ULIMAT chargée';
+    indicator.style.cssText = `
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 51, 102, 0.9);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        font-weight: bold;
+    `;
+
+    mapFrame.style.position = 'relative';
+    mapFrame.appendChild(indicator);
+
+    setTimeout(() => {
+        indicator.style.opacity = '1';
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+            setTimeout(() => {
+                indicator.remove();
+            }, 300);
+        }, 3000);
+    }, 1000);
 }
