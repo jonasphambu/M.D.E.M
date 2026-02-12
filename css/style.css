@@ -1021,10 +1021,6 @@ footer {
         text-align: center;
     }
 
-    .hero-buttons{
-        
-    }
-
     .hero h1 {
         font-size: 2rem;
     }
@@ -1055,13 +1051,16 @@ footer {
     .about-container {
         grid-template-columns: 1fr;
     }
-
+    .hero{
+        height: 100vh;
+    }
     .about-img {
         order: -1;
     }
     .about-text h2{
         font-size: 1.5rem;
     }
+
     .section-title h2{
         font-size: 1.5rem;
     }
@@ -1079,5 +1078,20 @@ footer {
     }
     .logo-img img{
         width: 80px;
+    }
+    .hero-content h1{
+        font-size: 1.4erm;
+    }
+    .btn-primary{
+        display: flex;
+        font-size: 10px;
+        margin-top: -22px;
+    }
+    .btn-outline{
+        display: flex;
+        font-size: 10px;
+    }
+    .card,.card-2,.card-3{
+        height: 40vh;
     }
 }
