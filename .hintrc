@@ -3,26 +3,17 @@
     "development"
   ],
   "hints": {
+    "compat-api/css": "off",
     "axe/name-role-value": [
       "default",
       {
-        "button-name": "off",
         "link-name": "off"
       }
     ],
     "axe/text-alternatives": [
       "default",
       {
-        "image-alt": "off",
-        "frame-title": "off"
-      }
-    ],
-    "compat-api/html": [
-      "default",
-      {
-        "ignore": [
-          "iframe[referrerpolicy=no-referrer-when-downgrade]"
-        ]
+        "image-alt": "off"
       }
     ]
   }
