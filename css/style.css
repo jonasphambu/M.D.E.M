@@ -1044,10 +1044,10 @@ footer {
         flex-direction: column;
         align-items: flex-start;
     }
-     
-    .text p{ 
-        font-size: 1.4rem;
-     }
+    .card-icone{
+        justify-content: center;
+    }
+  
 }
 
 @media (max-width: 568px){
@@ -1096,10 +1096,11 @@ footer {
         font-size: 10px;
     }
     .card,.card-2,.card-3{
-        height: 45vh;
+        display: block;
+        height: 35vh;
     }
      .text p{ 
-        font-size: 1rem;
+        font-size: 1.5rem;
      }
      .news-content ul li{
         font-size: 5px;
